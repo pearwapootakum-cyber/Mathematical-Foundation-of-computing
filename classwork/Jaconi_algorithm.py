@@ -6,11 +6,11 @@ A = [
 
 b = [5, -1, 7]
 
-x_prev = [0.1, 0.1, 0.2]
+x_prev = [1.0, 2.0, 3.0]
 x = x_prev.copy()
 
 if __name__ == "__main__":
-    eps = 0.000000001
+    eps = 0.01
     max_iter_num = 200
 
     n = len(b)
