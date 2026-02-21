@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WiFi Multilateration</title>
+
+  <!-- Leaflet.js for interactive map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f0f2f5;
+      color: #333;
+    }
+
+    header {
+      background: #1a73e8;
+      color: white;
+      padding: 16px 24px;
+    }
+    header h1 { font-size: 1.4rem; font-weight: 600; }
+    header p  { font-size: 0.85rem; opacity: 0.85; margin-top: 2px; }
+
+    .container {
+      max-width: 960px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.12);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 { font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: #1a73e8; }
+
+    .btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    button {
+      padding: 10px 22px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: opacity .15s;
+    }
+    button:hover { opacity: 0.85; }
+    button:disabled { opacity: 0.5; cursor: default; }
+
+    #btn-scan { background: #1a73e8; color: white; }
+    #btn-demo { background: #34a853; color: white; }
+
+    #status {
+      margin-top: 14px;
+      font-size: 0.88rem;
+      color: #555;
+      min-height: 1.2em;
+    }
+
+    #map {
+      height: 380px;
+      border-radius: 8px;
+      background: #e8e8e8;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    th {
+      text-align: left;
+      background: #f8f9fa;
+      padding: 8px 10px;
+      border-bottom: 2px solid #e0e0e0;
+      color: #555;
+      font-weight: 600;
+    }
+    td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+
+    .pos-box {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .pos-item { flex: 1; min-width: 140px; }
+    .pos-label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: .05em; }
+    .pos-value { font-size: 1.5rem; font-weight: 700; color: #1a73e8; margin-top: 4px; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-live { background: #e8f5e9; color: #2e7d32; }
+    .badge-demo { background: #fff8e1; color: #f57f17; }
+
+    .error-msg {
+      background: #fce8e6;
+      color: #c62828;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 0.88rem;
+    }
+
+    #results { display: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>WiFi Multilateration Positioning</h1>
+  <p>Estimates your location using nearby WiFi signal strength (RSSI) — no GPS required.</p>
+</header>
+
+<div class="container">
+
+  <!-- Controls -->
+  <div class="card">
+    <h2>Scan</h2>
+    <div class="btn-row">
+      <button id="btn-scan">Scan WiFi (Live)</button>
+      <button id="btn-demo">Demo Mode</button>
+    </div>
+    <div id="status">Press a button to start.</div>
+  </div>
+
+  <!-- Results (hidden until data arrives) -->
+  <div id="results">
+
+    <!-- Estimated Position -->
+    <div class="card">
+      <h2>Estimated Position &nbsp;<span id="mode-badge" class="badge"></span></h2>
+      <div class="pos-box">
+        <div class="pos-item">
+          <div class="pos-label">Latitude</div>
+          <div class="pos-value" id="val-lat">—</div>
+        </div>
+        <div class="pos-item">
+          <div class="pos-label">Longitude</div>
+          <div class="pos-value" id="val-lon">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map -->
+    <div class="card">
+      <h2>Map</h2>
+      <div id="map"></div>
+    </div>
+
+    <!-- Access Points Table -->
+    <div class="card">
+      <h2>Access Points Used</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>SSID</th>
+            <th>RSSI (dBm)</th>
+            <th>Est. Distance (m)</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+          </tr>
+        </thead>
+        <tbody id="ap-table-body"></tbody>
+      </table>
+    </div>
+
+  </div><!-- /results -->
+
+</div><!-- /container -->
+
+<script>
+  let map = null;
+  let markers = [];
+
+  function initMap(lat, lon) {
+    if (!map) {
+      map = L.map("map").setView([lat, lon], 17);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors"
+      }).addTo(map);
+    } else {
+      map.setView([lat, lon], 17);
+    }
+  }
+
+  function clearMarkers() {
+    markers.forEach(m => m.remove());
+    markers = [];
+  }
+
+  function addMarker(lat, lon, label, color) {
+    const icon = L.divIcon({
+      className: "",
+      html: `<div style="
+        background:${color};width:14px;height:14px;border-radius:50%;
+        border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,.4)
+      "></div>`,
+      iconSize: [14, 14],
+      iconAnchor: [7, 7],
+    });
+    const m = L.marker([lat, lon], { icon })
+      .addTo(map)
+      .bindPopup(label);
+    markers.push(m);
+  }
+
+  function setStatus(msg) {
+    document.getElementById("status").textContent = msg;
+  }
+
+  function showError(msg) {
+    document.getElementById("results").style.display = "none";
+    document.getElementById("status").innerHTML =
+      `<div class="error-msg">${msg}</div>`;
+  }
+
+  function renderResults(data) {
+    if (data.error) {
+      showError(data.error);
+      return;
+    }
+
+    const lat = data.position.latitude;
+    const lon = data.position.longitude;
+
+    // Position values
+    document.getElementById("val-lat").textContent = lat.toFixed(6);
+    document.getElementById("val-lon").textContent = lon.toFixed(6);
+
+    // Mode badge
+    const badge = document.getElementById("mode-badge");
+    badge.textContent = data.mode === "live" ? "Live" : "Demo";
+    badge.className = "badge " + (data.mode === "live" ? "badge-live" : "badge-demo");
+
+    // AP table
+    const tbody = document.getElementById("ap-table-body");
+    tbody.innerHTML = "";
+    data.access_points.forEach(ap => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${ap.ssid}</td>
+        <td>${ap.rssi}</td>
+        <td>${ap.distance}</td>
+        <td>${ap.latitude.toFixed(6)}</td>
+        <td>${ap.longitude.toFixed(6)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // Map
+    initMap(lat, lon);
+    clearMarkers();
+
+    // User marker (red)
+    addMarker(lat, lon, "You (estimated position)", "#e53935");
+
+    // AP markers (blue)
+    data.access_points.forEach(ap => {
+      addMarker(ap.latitude, ap.longitude,
+        `${ap.ssid}<br>RSSI: ${ap.rssi} dBm<br>~${ap.distance} m`, "#1a73e8");
+    });
+
+    // Draw circles showing estimated radius from each AP
+    data.access_points.forEach(ap => {
+      const metersPerDeg = 111320;
+      L.circle([ap.latitude, ap.longitude], {
+        radius: ap.distance,
+        color: "#1a73e8",
+        weight: 1,
+        fillOpacity: 0.05,
+      }).addTo(map);
+    });
+
+    document.getElementById("results").style.display = "block";
+    setStatus("Done.");
+  }
+
+  async function fetchAndRender(endpoint) {
+    document.getElementById("btn-scan").disabled = true;
+    document.getElementById("btn-demo").disabled = true;
+    setStatus(`Calling /${endpoint}...`);
+
+    try {
+      const res = await fetch(`/${endpoint}`);
+      const data = await res.json();
+      renderResults(data);
+    } catch (err) {
+      showError(`Request failed: ${err.message}`);
+    } finally {
+      document.getElementById("btn-scan").disabled = false;
+      document.getElementById("btn-demo").disabled = false;
+    }
+  }
+
+  document.getElementById("btn-scan").addEventListener("click", () => fetchAndRender("scan"));
+  document.getElementById("btn-demo").addEventListener("click", () => fetchAndRender("demo"));
+</script>
+
+</body>
+</html>

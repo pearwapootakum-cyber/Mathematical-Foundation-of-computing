@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_ae2395b84254d46ec0427ce7ce98c5e4 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_ae2395b84254d46ec0427ce7ce98c5e4" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_ae2395b84254d46ec0427ce7ce98c5e4 = L.map(
+                "map_ae2395b84254d46ec0427ce7ce98c5e4",
+                {
+                    center: [13.73675099084613, 100.52352489537724],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 18,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_7ab88de509fb738da925e9ed8b8aef0e = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_7ab88de509fb738da925e9ed8b8aef0e.addTo(map_ae2395b84254d46ec0427ce7ce98c5e4);
+        
+    
+            var marker_8bc1b228aae7f4dec3d9b7fe126d6edd = L.marker(
+                [13.73675099084613, 100.52352489537724],
+                {
+}
+            ).addTo(map_ae2395b84254d46ec0427ce7ce98c5e4);
+        
+    
+            var icon_62a4f21c94efcac9fd8e2dd03919f5dd = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_698254bcd142ebe1cf562c97389f698c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b6ac14b85dc929df840712ed094e37bd = $(`<div id="html_b6ac14b85dc929df840712ed094e37bd" style="width: 100.0%; height: 100.0%;">User Position</div>`)[0];
+                popup_698254bcd142ebe1cf562c97389f698c.setContent(html_b6ac14b85dc929df840712ed094e37bd);
+            
+        
+
+        marker_8bc1b228aae7f4dec3d9b7fe126d6edd.bindPopup(popup_698254bcd142ebe1cf562c97389f698c)
+        ;
+
+        
+    
+    
+                marker_8bc1b228aae7f4dec3d9b7fe126d6edd.setIcon(icon_62a4f21c94efcac9fd8e2dd03919f5dd);
+            
+    
+            var marker_b91c745bf198f8e7aac561bed2c78c95 = L.marker(
+                [13.7367, 100.5231],
+                {
+}
+            ).addTo(map_ae2395b84254d46ec0427ce7ce98c5e4);
+        
+    
+        var popup_c840e605ce210ddc71519553ed19a143 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_30f47b49502cd0eaf5c13e7d18eea8fd = $(`<div id="html_30f47b49502cd0eaf5c13e7d18eea8fd" style="width: 100.0%; height: 100.0%;">CafeWiFi</div>`)[0];
+                popup_c840e605ce210ddc71519553ed19a143.setContent(html_30f47b49502cd0eaf5c13e7d18eea8fd);
+            
+        
+
+        marker_b91c745bf198f8e7aac561bed2c78c95.bindPopup(popup_c840e605ce210ddc71519553ed19a143)
+        ;
+
+        
+    
+    
+            var marker_e60a31e786fab04982a7cde735a012bd = L.marker(
+                [13.7375, 100.5225],
+                {
+}
+            ).addTo(map_ae2395b84254d46ec0427ce7ce98c5e4);
+        
+    
+        var popup_3ac32ef0bd6c5ff06b8f10b2a96379f2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_bf19f997f3cc685e16b1f378069ca540 = $(`<div id="html_bf19f997f3cc685e16b1f378069ca540" style="width: 100.0%; height: 100.0%;">MallWiFi</div>`)[0];
+                popup_3ac32ef0bd6c5ff06b8f10b2a96379f2.setContent(html_bf19f997f3cc685e16b1f378069ca540);
+            
+        
+
+        marker_e60a31e786fab04982a7cde735a012bd.bindPopup(popup_3ac32ef0bd6c5ff06b8f10b2a96379f2)
+        ;
+
+        
+    
+    
+            var marker_841165f46af151b7ff6d1af098d43cae = L.marker(
+                [13.7359, 100.524],
+                {
+}
+            ).addTo(map_ae2395b84254d46ec0427ce7ce98c5e4);
+        
+    
+        var popup_cdc2d2384904d151376d4a783bb8d5ee = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2f8b1db951574ea6b32efd6e230367e5 = $(`<div id="html_2f8b1db951574ea6b32efd6e230367e5" style="width: 100.0%; height: 100.0%;">AirportWiFi</div>`)[0];
+                popup_cdc2d2384904d151376d4a783bb8d5ee.setContent(html_2f8b1db951574ea6b32efd6e230367e5);
+            
+        
+
+        marker_841165f46af151b7ff6d1af098d43cae.bindPopup(popup_cdc2d2384904d151376d4a783bb8d5ee)
+        ;
+
+        
+    
+    
+            var marker_e520dc4d19d08e7891b78650f438c73c = L.marker(
+                [13.7382, 100.5218],
+                {
+}
+            ).addTo(map_ae2395b84254d46ec0427ce7ce98c5e4);
+        
+    
+        var popup_3d9ea3ae3866258af497d514b6dad2b8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c192f4aa1ceca3eed1e1d9d9257a1edd = $(`<div id="html_c192f4aa1ceca3eed1e1d9d9257a1edd" style="width: 100.0%; height: 100.0%;">LibraryWiFi</div>`)[0];
+                popup_3d9ea3ae3866258af497d514b6dad2b8.setContent(html_c192f4aa1ceca3eed1e1d9d9257a1edd);
+            
+        
+
+        marker_e520dc4d19d08e7891b78650f438c73c.bindPopup(popup_3d9ea3ae3866258af497d514b6dad2b8)
+        ;
+
+        
+    
+    
+            var marker_80c705d5ef9236f979e6de58c0479110 = L.marker(
+                [13.736, 100.525],
+                {
+}
+            ).addTo(map_ae2395b84254d46ec0427ce7ce98c5e4);
+        
+    
+        var popup_aa4f395376f0d697f690b1168c09baba = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_87c5dc074de04e14d43c2329a8b097d5 = $(`<div id="html_87c5dc074de04e14d43c2329a8b097d5" style="width: 100.0%; height: 100.0%;">HotelWiFi</div>`)[0];
+                popup_aa4f395376f0d697f690b1168c09baba.setContent(html_87c5dc074de04e14d43c2329a8b097d5);
+            
+        
+
+        marker_80c705d5ef9236f979e6de58c0479110.bindPopup(popup_aa4f395376f0d697f690b1168c09baba)
+        ;
+
+        
+    
+    
+            var marker_3cbc9805f4131a3afb38f01c3742a907 = L.marker(
+                [13.7349, 100.5236],
+                {
+}
+            ).addTo(map_ae2395b84254d46ec0427ce7ce98c5e4);
+        
+    
+        var popup_52d14f39a2394eaba6f36011db0b654f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e630ff9c71661426bc9636d04095700b = $(`<div id="html_e630ff9c71661426bc9636d04095700b" style="width: 100.0%; height: 100.0%;">ParkWiFi</div>`)[0];
+                popup_52d14f39a2394eaba6f36011db0b654f.setContent(html_e630ff9c71661426bc9636d04095700b);
+            
+        
+
+        marker_3cbc9805f4131a3afb38f01c3742a907.bindPopup(popup_52d14f39a2394eaba6f36011db0b654f)
+        ;
+
+        
+    
+</script>
+</html>
